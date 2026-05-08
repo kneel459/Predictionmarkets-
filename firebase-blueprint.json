@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and balance",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "balance": { "type": "number", "description": "Virtual balance for betting" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "balance"]
+    },
+    "Market": {
+      "title": "Market",
+      "description": "Prediction market details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "outcomeA": { "type": "string", "description": "Name of outcome A (e.g., Yes)" },
+        "outcomeB": { "type": "string", "description": "Name of outcome B (e.g., No)" },
+        "outcomeAPrice": { "type": "number", "description": "Current price of outcome A (0 to 1)" },
+        "outcomeBPrice": { "type": "number", "description": "Current price of outcome B (0 to 1)" },
+        "volume": { "type": "number" },
+        "liquidity": { "type": "number" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["open", "closed", "resolved"] },
+        "resolution": { "type": "string", "enum": ["A", "B"] }
+      },
+      "required": ["question", "outcomeA", "outcomeB", "outcomeAPrice", "outcomeBPrice", "status"]
+    },
+    "Bet": {
+      "title": "Bet",
+      "description": "A single bet placement",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "marketId": { "type": "string" },
+        "outcome": { "type": "string", "enum": ["A", "B"] },
+        "amount": { "type": "number" },
+        "shares": { "type": "number" },
+        "price": { "type": "number" },
+        "fee": { "type": "number", "description": "Transaction fee (e.g., 1%)" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "marketId", "outcome", "amount", "shares", "price", "fee"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User data"
+    },
+    "/markets/{marketId}": {
+      "schema": "Market",
+      "description": "Prediction markets"
+    },
+    "/bets/{betId}": {
+      "schema": "Bet",
+      "description": "Bets placed by users"
+    }
+  }
+}
